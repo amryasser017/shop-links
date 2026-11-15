@@ -1,0 +1,351 @@
+/* ==========================================================
+   Shop Links — index.css
+   Modern, clean, auto light/dark. Replace src/index.css with this
+   and EMPTY src/App.css.
+   ========================================================== */
+
+/* ---------- 1. Design tokens ---------- */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-hover: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e5e7ef;
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent);
+  --on-accent: #ffffff;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+  --shadow-md: 0 8px 24px -8px rgb(15 23 42 / 0.12);
+  --shadow-lg: 0 18px 40px -12px rgb(79 70 229 / 0.28);
+
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0d14;
+    --surface: #141824;
+    --surface-hover: #1a1f2e;
+    --text: #e8eaf2;
+    --text-muted: #94a3b8;
+    --border: #252b3b;
+    --accent: #818cf8;
+    --accent-strong: #a5b4fc;
+    --on-accent: #0b0d14;
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.6);
+    --shadow-lg: 0 18px 40px -12px rgb(129 140 248 / 0.28);
+  }
+}
+
+/* ---------- 2. Reset / base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(900px 400px at 85% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(700px 360px at -5% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
+  background-repeat: no-repeat;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* cancel Vite template styles */
+#root {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 3px;
+}
+
+/* ---------- 3. Layout ---------- */
+.page {
+  width: min(1100px, 100% - 2.5rem);
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+/* ---------- 4. Titles ---------- */
+.home-title {
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  background: linear-gradient(120deg, var(--text) 30%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.category-page-title {
+  font-size: clamp(1.9rem, 5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.page-subtitle {
+  margin-top: 0.6rem;
+  max-width: 55ch;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+/* ---------- 5. Search bar ---------- */
+.search-bar {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  margin-block: 1.75rem 2rem;
+  padding: 0.95rem 1.25rem 0.95rem 3rem;
+  font: inherit;
+  color: var(--text);
+  background-color: var(--surface);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 1.05rem center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar::placeholder {
+  color: var(--text-muted);
+}
+
+.search-bar:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* ---------- 6. Card grid ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1.25rem;
+}
+
+/* shared card look */
+.category-card,
+.store-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  animation: fade-up 0.5s ease both;
+}
+
+.category-card:hover,
+.store-card:hover,
+.category-card:has(:focus-visible) {
+  transform: translateY(-4px);
+  background: var(--surface-hover);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: var(--shadow-lg);
+}
+
+/* stagger the entrance */
+.card-grid > :nth-child(2) { animation-delay: 0.05s; }
+.card-grid > :nth-child(3) { animation-delay: 0.1s; }
+.card-grid > :nth-child(4) { animation-delay: 0.15s; }
+.card-grid > :nth-child(5) { animation-delay: 0.2s; }
+.card-grid > :nth-child(n + 6) { animation-delay: 0.25s; }
+
+/* ---------- 7. Category card ---------- */
+.category-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.category-card-description {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.category-card-link {
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+/* makes the WHOLE card clickable */
+.category-card-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.category-card-link::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.4rem;
+  transition: transform 0.25s ease;
+}
+
+.category-card:hover .category-card-link::after {
+  transform: translateX(5px);
+}
+
+.category-card-link:focus-visible {
+  outline: none; /* the card shows the focus state instead */
+}
+
+/* ---------- 8. Store card ---------- */
+.store-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.store-card-link {
+  align-self: flex-start;
+  margin-top: 1rem;
+  padding: 0.6rem 1.15rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--on-accent);
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.store-card-link::after {
+  content: "↗";
+  margin-left: 0.4rem;
+}
+
+.store-card-link:hover {
+  background: var(--accent-strong);
+  box-shadow: 0 6px 16px -6px var(--accent);
+}
+
+.store-card-link:active {
+  transform: scale(0.97);
+}
+
+/* ---------- 9. Back link ---------- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 2.5rem;
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.back-link::before {
+  content: "←";
+}
+
+.back-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ---------- 10. Empty state ---------- */
+.empty-message {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+
+/* ---------- 11. Animation ---------- */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- 12. Mobile ---------- */
+@media (max-width: 560px) {
+  .page {
+    width: calc(100% - 2rem);
+  }
+
+  .search-bar {
+    max-width: none;
+  }
+
+  .card-grid {
+    gap: 1rem;
+  }
+
+  .category-card,
+  .store-card {
+    padding: 1.25rem;
+  }
+}
