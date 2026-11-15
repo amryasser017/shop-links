@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { getToken, setToken, login, saveCategories } from '../lib/api.js'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import LampLogin from './LampLogin.jsx'
+import { getToken, setToken, saveCategories } from '../lib/api.js'
 import { useData } from '../lib/DataContext.jsx'
 
 const ERRORS = {
@@ -14,41 +16,6 @@ const msg = (e) => ERRORS[e.message] || 'Something went wrong. Please try again.
 const slugify = (s) =>
   s.toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '')
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()))
-
-function Login({ onDone }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [busy, setBusy] = useState(false)
-
-  async function submit(e) {
-    e.preventDefault()
-    setBusy(true); setError('')
-    try {
-      setToken(await login(email, password))
-      onDone()
-    } catch (err) {
-      setError(msg(err))
-    } finally { setBusy(false) }
-  }
-
-  return (
-    <div className="auth-wrap">
-      <form className="panel auth" onSubmit={submit}>
-        <span className="category-icon big" aria-hidden="true">🔐</span>
-        <h1>Admin sign in</h1>
-        <label className="field">Email
-          <input type="email" required autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <label className="field">Password
-          <input type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </label>
-        {error && <p className="alert" role="alert">{error}</p>}
-        <button className="btn btn-primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-      </form>
-    </div>
-  )
-}
 
 function Modal({ title, onClose, children }) {
   return (
@@ -155,7 +122,7 @@ function Dashboard({ onLogout }) {
   return (
     <div className="admin">
       <header className="admin-bar">
-        <a href="/" className="brand">🛍️ <b>Shop</b>Links <span className="tag">Admin</span></a>
+        <a href="/" className="brand" title="View public site">🛍️ <b>Shop</b>Links <span className="tag">Admin</span></a>
         <button className="btn btn-ghost sm" onClick={() => { setToken(null); onLogout() }}>Sign out</button>
       </header>
       <main className="container">
@@ -232,6 +199,23 @@ function Dashboard({ onLogout }) {
 }
 
 export default function AdminPage() {
+  const nav = useNavigate()
   const [authed, setAuthed] = useState(!!getToken())
-  return authed ? <Dashboard onLogout={() => setAuthed(false)} /> : <Login onDone={() => setAuthed(true)} />
+  return (
+    <Routes>
+      <Route
+        path="login"
+        element={authed
+          ? <Navigate to="/admin" replace />
+          : <LampLogin onDone={() => { setAuthed(true); nav('/admin', { replace: true }) }} />}
+      />
+      <Route
+        index
+        element={authed
+          ? <Dashboard onLogout={() => { setAuthed(false); nav('/admin/login', { replace: true }) }} />
+          : <Navigate to="/admin/login" replace />}
+      />
+      <Route path="*" element={<Navigate to="/admin" replace />} />
+    </Routes>
+  )
 }

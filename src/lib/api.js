@@ -1,12 +1,14 @@
 const TOKEN_KEY = 'shoplinks_admin_token'
 
 export const getToken = () => {
-  try { return sessionStorage.getItem(TOKEN_KEY) } catch { return null }
+  try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) } catch { return null }
 }
-export const setToken = (t) => {
+// persist=true keeps the login across browser restarts; otherwise only for this tab
+export const setToken = (t, persist = false) => {
   try {
-    if (t) sessionStorage.setItem(TOKEN_KEY, t)
-    else sessionStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(TOKEN_KEY)
+    sessionStorage.removeItem(TOKEN_KEY)
+    if (t) (persist ? localStorage : sessionStorage).setItem(TOKEN_KEY, t)
   } catch { /* ignore */ }
 }
 
