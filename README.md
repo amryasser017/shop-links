@@ -33,3 +33,9 @@ Locally, copy `.env.example` to `.env`; `npm run dev` serves the `/api` routes t
 ## Using your own Flask + MySQL back-end
 
 The React app reads the API address from `VITE_API_URL` (see `.env.example`). It defaults to `http://127.0.0.1:5000`. Expected endpoints: `POST /api/login`, `GET /api/categories`, `GET /api/categories/<slug>/stores`, and admin-only (Bearer token) `POST/PUT/DELETE` for `/api/categories` and `/api/stores`.
+
+## Repository layout
+
+- `/` (root): React front-end, deployed on Vercel
+- `back-end/`: Flask + MySQL API, deployed on Railway. See `back-end/DEPLOY.md`.
+- `docs/ARCHITECTURE.md`: how the parts fit together
