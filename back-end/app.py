@@ -201,7 +201,9 @@ def update_category(category_id):
 def delete_category(category_id):
     if not fetch_one("SELECT ID FROM categories WHERE ID = %s", (category_id,)):
         return error("not_found", 404)
-    execute("DELETE FROM categories WHERE ID = %s", (category_id,))  # stores go too (CASCADE)
+    # delete the stores explicitly, so this works even if the database does not enforce CASCADE
+    execute("DELETE FROM stores WHERE category_id = %s", (category_id,))
+    execute("DELETE FROM categories WHERE ID = %s", (category_id,))
     return jsonify({"deleted": category_id})
 
 
