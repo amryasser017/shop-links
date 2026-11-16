@@ -4,11 +4,12 @@ import CategoryCard from '../components/CategoryCard'
 import { useData } from '../lib/DataContext.jsx'
 
 function Home() {
-  const { categories } = useData()
+  const { categories, loading, error } = useData()
   const [searchTerm, setSearchTerm] = useState('')
   const q = searchTerm.trim().toLowerCase()
   const filtered = categories.filter((c) => c.name.toLowerCase().includes(q))
-  const total = categories.reduce((n, c) => n + c.stores.length, 0)
+  // CHANGED: the API sends `store_count` for each category (there is no stores list here anymore)
+  const total = categories.reduce((n, c) => n + c.store_count, 0)
 
   return (
     <>
@@ -18,12 +19,18 @@ function Home() {
         <p>{total} trusted stores across {categories.length} categories, one tap away.</p>
         <SearchBar placeholder="Search categories…" value={searchTerm} onChange={setSearchTerm} />
       </header>
-      {filtered.length === 0 ? (
-        <p className="empty">No categories match “{searchTerm}”.</p>
+      {/* CHANGED: loading and error states, because data now comes from a server */}
+      {loading ? (
+        <p className="empty">Loading…</p>
+      ) : error ? (
+        <p className="empty">Could not load categories. Please try again later.</p>
+      ) : filtered.length === 0 ? (
+        <p className="empty">{categories.length ? `No categories match “${searchTerm}”.` : 'No categories yet.'}</p>
       ) : (
         <section className="grid grid-cats" aria-label="Categories">
           {filtered.map((c) => (
-            <CategoryCard key={c.slug} name={c.name} icon={c.icon} slug={c.slug} storeCount={c.stores.length} />
+            // CHANGED: storeCount comes from c.store_count
+            <CategoryCard key={c.slug} name={c.name} icon={c.icon} slug={c.slug} storeCount={c.store_count} />
           ))}
         </section>
       )}

@@ -29,3 +29,7 @@ Visit `/admin` (it isn't linked anywhere on the public site) and sign in. Admins
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Upstash Redis (Vercel Marketplace → Upstash) so data persists |
 
 Locally, copy `.env.example` to `.env`; `npm run dev` serves the `/api` routes too (in-memory storage).
+
+## Using your own Flask + MySQL back-end
+
+The React app reads the API address from `VITE_API_URL` (see `.env.example`). It defaults to `http://127.0.0.1:5000`. Expected endpoints: `POST /api/login`, `GET /api/categories`, `GET /api/categories/<slug>/stores`, and admin-only (Bearer token) `POST/PUT/DELETE` for `/api/categories` and `/api/stores`.
